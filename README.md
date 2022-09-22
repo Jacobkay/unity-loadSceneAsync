@@ -10,10 +10,15 @@
 2.  单例类，直接调用接口，传入对应参数即可实现场景异步加载
 
 #### 使用说明
-内含demo，可查看demo中SceneLoadTest.cs脚本
-API：
+1.  SceneLoadTool为单例类
+2.  引入ZTools命名空间
+3.  使用预制体或者scene制作自己想要的loading页，通过LoadEvent（下方有介绍）监听加载进度
+4.  使用SceneLoadWithPrefab或者SceneLoadWithScene传入跳转到的场景名称和loading页，即可完成场景的异步跳转
 
-1.获取加载进度
+内含demo，可查看demo中SceneLoadTest.cs脚本
+#### API说明：
+
+1.LoadEvent（广播事件）：获取加载进度，该方法一帧调用一次，加载未完成返回false，加载完成后返回true，即可停止方法的调用
 
 ```
 /// <summary>
@@ -21,7 +26,7 @@ API：
 /// </summary>
 public event Func<float, bool> LoadEvent;
 ```
-2.设置默认loading页名称
+2.DefaultLoadingPageName（属性）：如果场景中的loading页数量较少，不需要每次都有变化，可以直接设置默认loading页名称，后期调用可不穿参数
 
 ```
 /// <summary>
@@ -29,10 +34,10 @@ public event Func<float, bool> LoadEvent;
 /// </summary>
 public string DefaultLoadingPageName
 {
-	set {}
+    set {}
 }
 ```
-3.场景加载完之后是否立即初始化
+3.AllowSceneActivation（属性）：此场景加载为异步加载，默认为loading页完成事件返回true后，场景开始初始化，如将AllowSceneActivation设为true，场景加载完之后将立即初始化
 
 ```
 /// <summary>
@@ -40,53 +45,43 @@ public string DefaultLoadingPageName
 /// </summary>
 public bool AllowSceneActivation
 {
-	set { }
+    set {}
 }
 ```
 
 
 
  **loading页面为预制体格式** 
-1. 
+1. 场景加载，只传加载场景名称，loading页默认路径（Resources/Loading），默认single，无回调
 ```
 /// <summary>
 /// 场景加载，loading页面路径和名称"Resources/Loading"
 /// </summary>
 /// <param name="sceneName">加载场景名称</param>
-public void SceneLoadWithPrefab(string sceneName)
-{
-	
-}
+public void SceneLoadWithPrefab(string sceneName){}
 ```
 
-2.  
-
+2.  场景加载，传加载场景名称，loading页面路径，默认single，无回调
 ```
 /// <summary>
 /// 场景加载
 /// </summary>
 /// <param name="sceneName">加载场景名称</param>
 /// <param name="loadObjPath">loading页面路径</param>
-public void SceneLoadWithPrefab(string sceneName, string loadObjPath)
-{
-	
-}
+public void SceneLoadWithPrefab(string sceneName, string loadObjPath){}
 ```
 
-3.  
-
+3.  场景加载，传加载场景名称，loading页面对象，默认single，无回调
 ```
 /// <summary>
 /// 场景加载
 /// </summary>
 /// <param name="sceneName">加载场景名称</param>
-/// <param name="loadObjPath">loading页面路径</param>
-public void SceneLoadWithPrefab(string sceneName, GameObject loadObj)
-{
-	
-}
+/// <param name="loadObjPath">loading页面对象</param>
+public void SceneLoadWithPrefab(string sceneName, GameObject loadObj){}
 ```
-4.
+
+4. 场景加载，传加载场景名称，loading页面路径，加载模式，无回调
 ```
 /// <summary>
 /// 场景加载
@@ -94,27 +89,21 @@ public void SceneLoadWithPrefab(string sceneName, GameObject loadObj)
 /// <param name="sceneName">加载场景名称</param>
 /// <param name="loadObjPath">loading页面路径</param>
 /// <param name="mode">加载模式</param>
-public void SceneLoadWithPrefab(string sceneName, string loadObjPath, LoadSceneMode mode)
-{
-
-}
+public void SceneLoadWithPrefab(string sceneName, string loadObjPath, LoadSceneMode mode){}
 ```
-5.
 
+5. 场景加载，传加载场景名称，loading页面对象，加载模式，无回调
 ```
 /// <summary>
 /// 场景加载
 /// </summary>
 /// <param name="sceneName">加载场景名称</param>
-/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="loadObjPath">loading页面对象</param>
 /// <param name="mode">加载模式</param>
-public void SceneLoadWithPrefab(string sceneName, GameObject loadObj, LoadSceneMode mode)
-{
-
-}
+public void SceneLoadWithPrefab(string sceneName, GameObject loadObj, LoadSceneMode mode){}
 ```
-6.
 
+6. 场景加载，传加载场景名称，loading页面路径，加载模式，回调函数
 ```
 /// <summary>
 /// 场景加载
@@ -123,55 +112,43 @@ public void SceneLoadWithPrefab(string sceneName, GameObject loadObj, LoadSceneM
 /// <param name="loadObjPath">loading页面路径</param>
 /// <param name="mode">加载模式</param>
 /// <param name="successCallBack">加载完回调</param>
-public void SceneLoadWithPrefab(string sceneName, string loadObjPath, LoadSceneMode mode, Action successCallBack)
-{
-	
-}
+public void SceneLoadWithPrefab(string sceneName, string loadObjPath, LoadSceneMode mode, Action successCallBack){}
 ```
-7.
 
+7.场景加载，传加载场景名称，loading页面对象，加载模式，回调函数
 ```
 /// <summary>
 /// 场景加载
 /// </summary>
 /// <param name="sceneName">加载场景名称</param>
-/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="loadObjPath">loading页面对象</param>
 /// <param name="mode">加载模式</param>
 /// <param name="successCallBack">加载完回调</param>
-public void SceneLoadWithPrefab(string sceneName, GameObject loadObj, LoadSceneMode mode, Action successCallBack)
-{
-
-}
+public void SceneLoadWithPrefab(string sceneName, GameObject loadObj, LoadSceneMode mode, Action successCallBack){}
 ```
 
  **loading页面为预制体格式** 
-1.
 
+1. 场景加载，只传加载场景名称，loading场景名称默认为Loading，默认single，无回调
 ```
 /// <summary>
 /// 场景加载，loading页面路径和名称"Resources/Loading"
 /// </summary>
 /// <param name="sceneName">加载场景名称</param>
-public void SceneLoadWithScene(string sceneName)
-{
-
-}
+public void SceneLoadWithScene(string sceneName){}
 ```
-2.
 
+2. 场景加载，传加载场景名称，loading场景名称，默认single，无回调
 ```
 /// <summary>
 /// 场景加载，loading页面路径和名称"Resources/Loading"
 /// </summary>
 /// <param name="sceneName">加载场景名称</param>
 /// <param name="loadSceneName">loading场景名称</param>
-public void SceneLoadWithScene(string sceneName, string loadSceneName)
-{
-
-}
+public void SceneLoadWithScene(string sceneName, string loadSceneName){}
 ```
-3.
 
+3.场景加载，传加载场景名称，loading场景名称，加载模式，无回调
 ```
 /// <summary>
 /// 场景加载
@@ -179,13 +156,10 @@ public void SceneLoadWithScene(string sceneName, string loadSceneName)
 /// <param name="sceneName">加载场景名称</param>
 /// <param name="loadObjPath">loading页面路径</param>
 /// <param name="mode">加载模式</param>
-public void SceneLoadWithScene(string sceneName, string loadSceneName, LoadSceneMode mode)
-{
-	Load(sceneName, loadSceneName, mode, null);
-}
+public void SceneLoadWithScene(string sceneName, string loadSceneName, LoadSceneMode mode){}
 ```
-4.
 
+4.场景加载，传加载场景名称，loading场景名称，加载模式，回调函数
 ```
 /// <summary>
 /// 场景加载
@@ -194,10 +168,7 @@ public void SceneLoadWithScene(string sceneName, string loadSceneName, LoadScene
 /// <param name="loadObjPath">loading页面路径</param>
 /// <param name="mode">加载模式</param>
 /// <param name="successCallBack">加载完回调</param>
-public void SceneLoadWithScene(string sceneName, string loadSceneName, LoadSceneMode mode, Action successCallBack)
-{
-	Load(sceneName, loadSceneName, mode, successCallBack);
-}
+public void SceneLoadWithScene(string sceneName, string loadSceneName, LoadSceneMode mode, Action successCallBack){}
 ```
 
 
