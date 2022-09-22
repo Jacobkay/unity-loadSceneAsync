@@ -3,19 +3,16 @@
 #### 介绍
 可自定义loading页，prefab和scene都可以，获取当前加载进度，场景异步加载
 
-#### 软件架构
-软件架构说明
-
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  下载代码，引入到工程中，核心脚本为SceneLoadTool
+2.  单例类，直接调用接口，传入对应参数即可实现场景异步加载
 
 #### 使用说明
 
-1.  xxxx
+API：
+1.  `SceneLoadTool.Instance.SceneLoadWithPrefab("Main", loading, UnityEngine.SceneManagement.LoadSceneMode.Single, () => { Debug.LogError("prefabSingle加载回调"); });`
 2.  xxxx
 3.  xxxx
 
