@@ -10,11 +10,200 @@
 2.  单例类，直接调用接口，传入对应参数即可实现场景异步加载
 
 #### 使用说明
-
+内含demo，可查看demo中SceneLoadTest.cs脚本
 API：
-1.  `SceneLoadTool.Instance.SceneLoadWithPrefab("Main", loading, UnityEngine.SceneManagement.LoadSceneMode.Single, () => { Debug.LogError("prefabSingle加载回调"); });`
-2.  xxxx
-3.  xxxx
+
+1.获取加载进度
+
+```
+/// <summary>
+/// 获取加载进度，加载成功后需返回true，否则为false；
+/// </summary>
+public event Func<float, bool> LoadEvent;
+```
+2.设置默认loading页名称
+
+```
+/// <summary>
+/// 设置默认loading页面名称
+/// </summary>
+public string DefaultLoadingPageName
+{
+	set {}
+}
+```
+3.场景加载完之后是否立即初始化
+
+```
+/// <summary>
+/// 场景加载完之后是否立即初始化
+/// </summary>
+public bool AllowSceneActivation
+{
+	set { }
+}
+```
+
+
+
+ **loading页面为预制体格式** 
+1. 
+```
+/// <summary>
+/// 场景加载，loading页面路径和名称"Resources/Loading"
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+public void SceneLoadWithPrefab(string sceneName)
+{
+	
+}
+```
+
+2.  
+
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+public void SceneLoadWithPrefab(string sceneName, string loadObjPath)
+{
+	
+}
+```
+
+3.  
+
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+public void SceneLoadWithPrefab(string sceneName, GameObject loadObj)
+{
+	
+}
+```
+4.
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="mode">加载模式</param>
+public void SceneLoadWithPrefab(string sceneName, string loadObjPath, LoadSceneMode mode)
+{
+
+}
+```
+5.
+
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="mode">加载模式</param>
+public void SceneLoadWithPrefab(string sceneName, GameObject loadObj, LoadSceneMode mode)
+{
+
+}
+```
+6.
+
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="mode">加载模式</param>
+/// <param name="successCallBack">加载完回调</param>
+public void SceneLoadWithPrefab(string sceneName, string loadObjPath, LoadSceneMode mode, Action successCallBack)
+{
+	
+}
+```
+7.
+
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="mode">加载模式</param>
+/// <param name="successCallBack">加载完回调</param>
+public void SceneLoadWithPrefab(string sceneName, GameObject loadObj, LoadSceneMode mode, Action successCallBack)
+{
+
+}
+```
+
+ **loading页面为预制体格式** 
+1.
+
+```
+/// <summary>
+/// 场景加载，loading页面路径和名称"Resources/Loading"
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+public void SceneLoadWithScene(string sceneName)
+{
+
+}
+```
+2.
+
+```
+/// <summary>
+/// 场景加载，loading页面路径和名称"Resources/Loading"
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadSceneName">loading场景名称</param>
+public void SceneLoadWithScene(string sceneName, string loadSceneName)
+{
+
+}
+```
+3.
+
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="mode">加载模式</param>
+public void SceneLoadWithScene(string sceneName, string loadSceneName, LoadSceneMode mode)
+{
+	Load(sceneName, loadSceneName, mode, null);
+}
+```
+4.
+
+```
+/// <summary>
+/// 场景加载
+/// </summary>
+/// <param name="sceneName">加载场景名称</param>
+/// <param name="loadObjPath">loading页面路径</param>
+/// <param name="mode">加载模式</param>
+/// <param name="successCallBack">加载完回调</param>
+public void SceneLoadWithScene(string sceneName, string loadSceneName, LoadSceneMode mode, Action successCallBack)
+{
+	Load(sceneName, loadSceneName, mode, successCallBack);
+}
+```
+
+
+
+
+
 
 #### 参与贡献
 
