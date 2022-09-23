@@ -37,17 +37,6 @@ public string DefaultLoadingPageName
     set {}
 }
 ```
-3.AllowSceneActivation（属性）：此场景加载为异步加载，默认为loading页完成事件返回true后，场景开始初始化，如将AllowSceneActivation设为true，场景加载完之后将立即初始化
-
-```
-/// <summary>
-/// 场景加载完之后是否立即初始化
-/// </summary>
-public bool AllowSceneActivation
-{
-    set {}
-}
-```
 
 
 
