@@ -47,10 +47,13 @@ namespace ZTools
 			set { loadingPageName = value; }
 		}
 		private bool allowSceneActivation = false;
+		/// <summary>
+		/// 场景加载完之后是否立即初始化
+		/// </summary>
 		public bool AllowSceneActivation
-        {
-            set { allowSceneActivation = value; }
-        }
+		{
+			set { allowSceneActivation = value; }
+		}
 		//------------------------------------
 
 		private float targetValue;
@@ -64,10 +67,11 @@ namespace ZTools
 		GameObject loadObj;
 
 		bool isLoading = false;
+		bool systemLoad = false;
 
 		LoadType loadType;
 
-		enum LoadType { Prefab, Scene}
+		enum LoadType { Prefab, Scene }
 
 		struct OtherSceneLoad
 		{
@@ -222,11 +226,12 @@ namespace ZTools
 				SceneManager.UnloadSceneAsync(sceneName);
 			}
 		}
-		void Load(string sceneName, GameObject loadObj, [DefaultValue("LoadSceneMode.Single")]LoadSceneMode loadSceneMode, Action successCallBack)
+		void Load(string sceneName, GameObject loadObj, [DefaultValue("LoadSceneMode.Single")] LoadSceneMode loadSceneMode, Action successCallBack)
 		{
 			if (!isLoading && !SceneManager.GetSceneByName(sceneName).IsValid())
 			{
 				isLoading = true;
+				systemLoad = true;
 				loadType = LoadType.Prefab;
 				this.successCallBack = successCallBack;
 				GameObject prefab = (loadingObjCanvas = GetCanvas().gameObject).transform.AddChildWithPrefab(loadObj);
@@ -241,17 +246,18 @@ namespace ZTools
 		}
 		void Load(string sceneName, string loadSceneName, [DefaultValue("LoadSceneMode.Single")] LoadSceneMode loadSceneMode, Action successCallBack)
 		{
-            if (!isLoading && !SceneManager.GetSceneByName(sceneName).IsValid())
-            {
+			if (!isLoading && !SceneManager.GetSceneByName(sceneName).IsValid())
+			{
 				isLoading = true;
+				systemLoad = true;
 				this.loadType = LoadType.Scene;
 				this.loadingPageName = loadSceneName;
 				this.successCallBack = successCallBack;
 				SceneManager.LoadSceneAsync(loadSceneName, loadSceneMode);
 				StartCoroutine(AsyncLoading(sceneName, loadSceneMode));
 			}
-            else
-            {
+			else
+			{
 				sceneLoadList.Add(new OtherSceneLoad { sceneName = sceneName, loadingSceneName = loadSceneName, loadSceneMode = loadSceneMode, successCallBack = successCallBack, loadType = LoadType.Scene });
 			}
 		}
@@ -263,17 +269,17 @@ namespace ZTools
 			sceneAsync.allowSceneActivation = allowSceneActivation;
 			yield return sceneAsync;
 		}
-
 		void Update()
 		{
 			if (null != sceneAsync)
 			{
 				targetValue = targetValue >= 0.9f ? 1 : sceneAsync.progress;
 			}
-			if (isLoading && null != LoadEvent)
+			if (systemLoad && null != LoadEvent)
 			{
-                if (LoadEvent.Invoke(targetValue))
-                {
+				if (LoadEvent.Invoke(targetValue))
+				{
+					systemLoad = false;
 					StartCoroutine(LoadSuccess());
 				}
 			}
@@ -299,7 +305,6 @@ namespace ZTools
 		IEnumerator LoadSuccess()
 		{
 			Debug.Log("加载结束");
-			isLoading = false;
 			sceneAsync.allowSceneActivation = true;
 			sceneAsync = null;
 			yield return (loadType == LoadType.Prefab) ? second : null;
@@ -308,30 +313,31 @@ namespace ZTools
 				successCallBack();
 				successCallBack = null;
 			}
+			switch (loadType)
+			{
+				case LoadType.Prefab:
+					Destroy(loadingObjCanvas);
+					loadingObjCanvas = null;
+					break;
+				case LoadType.Scene:
+					UnLoadScene(loadingPageName);
+					break;
+			}
+			isLoading = false;
 			if (sceneLoadList.Count > 0)
 			{
 				OtherSceneLoad obj = sceneLoadList[sceneLoadList.Count - 1];
-                switch (obj.loadType)
-                {
-                    case LoadType.Prefab:
+				switch (obj.loadType)
+				{
+					case LoadType.Prefab:
 						SceneLoadWithPrefab(obj.sceneName, obj.obj, obj.loadSceneMode, obj.successCallBack);
 						break;
-                    case LoadType.Scene:
+					case LoadType.Scene:
 						SceneLoadWithScene(obj.sceneName, obj.loadingSceneName, obj.loadSceneMode, obj.successCallBack);
 						break;
-                }
+				}
 				sceneLoadList.Remove(obj);
 			}
-            switch (loadType)
-            {
-                case LoadType.Prefab:
-                    Destroy(loadingObjCanvas);
-                    loadingObjCanvas = null;
-                    break;
-                case LoadType.Scene:
-					UnLoadScene(loadingPageName);
-                    break;
-            }
 		}
 		/// <summary>
 		/// 加载完成后设为启动项
